@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans&display=swap');
+
+:root {
+  --verde_azulado_escuro: #128C7E;
+  --verde_azulado: #075E54;
+  --verde_luminoso: #25D366;
+  --azul: #34B7F1;
+  --verde_clarinho: #efffe6;
+  --bege: #f2edc9;
+  --cinza_claro: #ebebeb;
+}
+
+body {
+	margin: 0px;
+	padding: 0px;
+	font-family: 'Open Sans', sans-serif;
+	color: #3e3e3e;
+}
+.largura_interna{
+	max-width: 1024px;
+}
+
+
+/* Botões */
+.bot_ativado {
+	transition: 0.2s;
+	background: var(--verde_azulado_escuro);
+	color: white;
+}
+.bot_ativado:hover {
+	background: var(--verde_luminoso);
+}
+
+.bot_desativado {
+	color: white;
+	background: grey;
+}

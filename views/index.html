@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Emissor</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://kit.fontawesome.com/2e7c10cc41.js" crossorigin="anonymous"></script>
+  <link rel="stylesheet" type="text/css" href='/css/simples.css'>
+  </link>
+  <link rel="stylesheet" type="text/css" href='/css/estilo.css'>
+  </link>
+  <script src="/js/mediastreamrecorder.js"></script>
+  <script type="text/javascript" src="/js/index.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+</head>
+
+<body>
+	
+  <div class="flex_col T1 center" style="height: 100vh; justify-content: flex-start;">
+
+    <!-- Banner -->
+    <div class="flex_row T1 center" style="background: var(--verde_azulado_escuro); color: white; align-items: flex-start; padding-left: 20px; padding-right: 20px; padding-top: 10px; padding-bottom: 10px;">
+      <div class="flex_row T2">
+        <span style="font-size: 25pt; font-weight: bold;">Emissor</span>
+      </div>
+      <div class="flex_row T2 center" style="justify-content: flex-start; height: 100%; font-size: 15pt;">
+        <div id="div_ola_transmissor"></div>
+      </div>
+    </div>
+
+
+    <!-- Quadradinho pra botar o nome do Emissor e fundo deste recipientezinho. -->
+    <div id="recip_bota_nome_emissor" class="flex_col T1 center" style="background: rgba(0, 0, 0, 0.5); position: fixed; height: 100vh; display: none; z-index: 100; padding: 10px;">
+      <div class="flex_col center T1" style="max-width: 400px; height: 300px; border-radius: 15px; background: var(--cinza_claro); padding: 25px; justify-content: flex-start;">
+
+        <div class="flex_row T1" style="justify-content: flex-end; margin-left: 20px; margin-top: -10px;">
+          <i class="fas fa-times-circle clicavel" style="font-size: 20pt; color: red;" onclick="fecha_bota_nome_emissor()"></i>
+        </div>
+
+        <!-- Parte branca de enviar a msg -->
+        <div class="flex_row T1" style="background: white; border-radius: 30px; height: 50px; padding-left: 30px; margin-top: 50px;">
+          <input id="nome_transmissor" type="text" placeholder="Digite seu nome aqui." style="border: none; outline: none; width: calc(100% - 45px); font-size: 14pt;" name="" onkeyup="verifica_campo_nome('emissor')">
+        </div>
+
+        <button id="bot_inicia_transmissao" class="bot_desativado clicavel" style="border-radius: 10px; padding: 15px; border: none; font-size: 15pt; margin-top: 40px;" onclick="inicia_transmissao()">Iniciar Transmissão</button>
+
+      </div>
+    </div>
+
+
+    <!-- Recipiente da parte de baixo -->
+    <div class="flex_row T1 center" style="height: 100%; overflow: auto; flex-wrap: wrap;">
+     
+      <!-- Tela de gravação -->
+      <div class="flex_col T2 T1_m center" style="justify-content: flex-start; max-height: 100%; height: 100%; padding: 10px;">
+
+        <video id="video_para_canvas" style="width: 100%; max-width: 100%; height: 100%; overflow: hidden; max-height: 100%; border-radius: 15px; background: var(--cinza_claro);  object-fit: cover;" autoplay="true"></video>
+
+        <!-- Boõezinhos de baixo -->
+        <div class="flex_row center T1" style="height: 100px; justify-content: flex-start; padding-right: 25px; padding-left: 25px; margin-top: 0px;">
+
+          <div class="flex_row center bot_ativado clicavel" style="border-radius: 100%; padding: 25px; height: 75px; width: 75px;" onclick="prepara_transmissao()">
+            <i class="fas fa-video clicavel" style="font-size: 40px;"></i>
+          </div>
+
+          <div id="bot_copiar_link" class="flex_row center clicavel bot_desativado" style="border-radius: 15px; padding: 25px; height: 50px; margin-left: 25px;" onclick="copia_end_transmissao()">
+            <i class="fas fa-copy" style="font-size: 30px;"></i>
+            <div style="margin-left: 15px; font-weight: bold;">
+              <span class="exclusivo_pc">Copiar link da transmissão</span>
+              <span class="exclusivo_mobile">Copiar link</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Tela de chat -->
+      <div class="flex_row T2 T1_m center" style="height: 100%; max-height: 100%; padding: 10px; ">
+        <div id="fundo_bate_papo" class="flex_col center T1" style="height: 100%; border-radius: 15px; background: var(--cinza_claro); padding: 15px; padding-top: 0px; justify-content: flex-start;">
+          <div class="flex_col T1 center" style="justify-content: flex-start; height: 100%; overflow-x: hidden; margin-bottom: 10px;">
+
+            <div id="recip_msgs" class="flex_col T1" style="height: 100%; max-height: calc(100% - 65px); overflow: auto;">
+
+            	<!-- Plaquinha de transmissão fechada. -->
+              <div class="flex_col T1" style="align-items: center;">
+                <div style="max-width: 100%;  background: #e0e0e0; border-radius: 10px; padding: 10px; margin-top: 10px;">
+                  <div style="margin-bottom: 5px;"><b>Transmissão fechada</b></div>
+                </div>
+              </div>
+
+            </div>
+
+            <!-- Parte onde está pra digitar e enviar msg -->
+            <div class="flex_row T1 center" style="margin-top: 15px;">
+              <!-- Parte branca de enviar a msg -->
+              <div class="flex_row T1" style="background: white; border-radius: 30px; height: 50px; padding-left: 30px;">
+                <input id="input_msg" type="text" placeholder="Escreva uma mensagem." style="border: none; outline: none; width: calc(100% - 45px); font-size: 14pt;" name="" disabled="true">
+              </div>
+              <!-- Botão verde de enviar msg -->
+              <div id="bot_enviar_msg" class="flex_row center bot_desativado clicavel" style="border-radius: 100%; padding: 25px; height: 50px; width: 50px; margin-left: 10px;" onclick="enviar_msg('emissor')">
+                <i class="fas fa-share" style="font-size: 25pt;"></i>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+
+</html>
